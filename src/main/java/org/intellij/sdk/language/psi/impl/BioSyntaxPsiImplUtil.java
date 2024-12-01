@@ -4,8 +4,10 @@ package org.intellij.sdk.language.psi.impl;
 
 import com.intellij.lang.ASTNode;
 import com.intellij.navigation.ItemPresentation;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
 import org.intellij.sdk.language.psi.BioSyntaxElementFactory;
 import org.intellij.sdk.language.psi.BioSyntaxProperty;
 import org.intellij.sdk.language.psi.BioSyntaxTypes;
@@ -28,10 +30,12 @@ public class BioSyntaxPsiImplUtil {
   public static String getValue(BioSyntaxProperty element) {
     ASTNode valueNode = element.getNode().findChildByType(BioSyntaxTypes.VALUE);
     if (valueNode != null) {
-      return valueNode.getText();
-    } else {
-      return null;
+      return valueNode.getText()
+              .replaceAll("\\\\[ \t]*(?:#[^\r\n]*)?\\R[ \t]*", " ")
+              .replaceAll("#[^\r\n]*", "")
+              .trim();
     }
+    return null;
   }
 
   public static String getName(BioSyntaxProperty element) {
@@ -62,14 +66,26 @@ public class BioSyntaxPsiImplUtil {
       @Nullable
       @Override
       public String getPresentableText() {
-        return String.valueOf(element.getKey());
+        String key = element.getKey();
+        String value = element.getValue();
+        return key + (value != null ? " = " + value.replaceAll("\\\\ *\\R *", "") : "");
       }
 
       @Nullable
       @Override
       public String getLocationString() {
-        PsiFile containingFile = element.getContainingFile();
-        return containingFile == null ? null : containingFile.getName();
+        PsiElement sibling = element.getPrevSibling();
+        StringBuilder comment = new StringBuilder();
+
+        while (sibling != null && (sibling instanceof PsiComment || sibling instanceof PsiWhiteSpace)) {
+          if (sibling instanceof PsiComment && !sibling.getText().trim().isEmpty()) {
+            if (comment.length() > 0) break;  // Only take the immediate comment
+            comment.insert(0, sibling.getText());
+          }
+          sibling = sibling.getPrevSibling();
+        }
+
+        return comment.toString();
       }
 
       @Override
