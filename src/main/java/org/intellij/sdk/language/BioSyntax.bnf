@@ -14,16 +14,15 @@
 
 bioSyntaxFile ::= item_*
 
-private item_ ::= (gene|protein_sequence|COMMENT|CRLF)
+private item_ ::= (declaration|gene|COMMENT|CRLF)
+
+declaration ::= nt_declaration | aa_declaration
+
+nt_declaration ::= NT_SEQ IDENTIFIER EQUALS QUOTE NUCLEOTIDE+ QUOTE
+aa_declaration ::= AA_SEQ IDENTIFIER EQUALS QUOTE AMINO_ACID+ QUOTE
 
 gene ::= PROMOTER? codon_block TERMINATOR?
-
 codon_block ::= START_CODON dna_content* STOP_CODON
-
 dna_content ::= (sequence|COMMENT|CRLF)+
-
-sequence ::= nucleotide+
-
-nucleotide ::= ADENINE | THYMINE | GUANINE | CYTOSINE | URACIL
-
-protein_sequence ::= AMINO_ACID+
+sequence ::= NUCLEOTIDE+
+nucleotides ::= ADENINE | THYMINE | GUANINE | CYTOSINE | URACIL

@@ -3,6 +3,11 @@ package org.intellij.sdk.language.psi;
 import com.intellij.psi.tree.TokenSet;
 
 public interface BioSyntaxTokenSets {
+    TokenSet TYPE_DECLARATIONS = TokenSet.create(
+            BioSyntaxTypes.NT_SEQ,
+            BioSyntaxTypes.AA_SEQ
+    );
+
     TokenSet NUCLEOTIDES = TokenSet.create(
             BioSyntaxTypes.ADENINE,
             BioSyntaxTypes.THYMINE,

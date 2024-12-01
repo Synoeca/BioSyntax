@@ -12,6 +12,10 @@ import com.intellij.psi.TokenType;
 %unicode
 %function advance
 %type IElementType
+%{
+  private IElementType prevToken;
+%}
+
 %eof{  return;
 %eof}
 
@@ -19,14 +23,8 @@ CRLF=\R
 WHITE_SPACE=[\ \n\t\f]
 COMMENT="//"[^\r\n]*
 
-// Nucleotides
-ADENINE=[Aa]
-THYMINE=[Tt]
-GUANINE=[Gg]
-CYTOSINE=[Cc]
-URACIL=[Uu]
-
-// Amino Acids
+// Combined nucleotides and amino acids
+NUCLEOTIDE=[ATGC]
 AMINO_ACID=[ACDEFGHIKLMNPQRSTVWY]
 
 // Structural elements
@@ -35,19 +33,47 @@ TERMINATOR="terminator"
 START_CODON=ATG
 STOP_CODON=(TAA|TAG|TGA)
 
+// Type system
+IDENTIFIER=[a-zA-Z][a-zA-Z0-9_]*
+EQUALS="="
+QUOTE=\"
+NT_SEQ="NtSeq"
+AA_SEQ="AASeq"
+
+%state IN_NT_STRING, IN_AA_STRING
+
+%{
+  private IElementType seqType = null;
+%}
+
+
 %%
+<YYINITIAL> {NT_SEQ}            { seqType = BioSyntaxTypes.NT_SEQ; return BioSyntaxTypes.NT_SEQ; }
+<YYINITIAL> {AA_SEQ}            { seqType = BioSyntaxTypes.AA_SEQ; return BioSyntaxTypes.AA_SEQ; }
+<YYINITIAL> {IDENTIFIER}        { return BioSyntaxTypes.IDENTIFIER; }
+<YYINITIAL> {EQUALS}           { return BioSyntaxTypes.EQUALS; }
 
-<YYINITIAL> {COMMENT}                    { return BioSyntaxTypes.COMMENT; }
-<YYINITIAL> {PROMOTER}                   { return BioSyntaxTypes.PROMOTER; }
-<YYINITIAL> {TERMINATOR}                 { return BioSyntaxTypes.TERMINATOR; }
-<YYINITIAL> {START_CODON}               { return BioSyntaxTypes.START_CODON; }
-<YYINITIAL> {STOP_CODON}                { return BioSyntaxTypes.STOP_CODON; }
-<YYINITIAL> {ADENINE}                   { return BioSyntaxTypes.ADENINE; }
-<YYINITIAL> {THYMINE}                   { return BioSyntaxTypes.THYMINE; }
-<YYINITIAL> {GUANINE}                   { return BioSyntaxTypes.GUANINE; }
-<YYINITIAL> {CYTOSINE}                  { return BioSyntaxTypes.CYTOSINE; }
-<YYINITIAL> {URACIL}                    { return BioSyntaxTypes.URACIL; }
-<YYINITIAL> {AMINO_ACID}                { return BioSyntaxTypes.AMINO_ACID; }
+<YYINITIAL> {QUOTE}            {
+    if (seqType == BioSyntaxTypes.NT_SEQ) {
+        yybegin(IN_NT_STRING);
+    } else if (seqType == BioSyntaxTypes.AA_SEQ) {
+        yybegin(IN_AA_STRING);
+    }
+    return BioSyntaxTypes.QUOTE;
+}
 
-{WHITE_SPACE}+                          { return TokenType.WHITE_SPACE; }
-[^]                                     { return TokenType.BAD_CHARACTER; }
+
+<IN_NT_STRING> {NUCLEOTIDE}+          { return BioSyntaxTypes.NUCLEOTIDE; }
+<IN_AA_STRING> {AMINO_ACID}+    { return BioSyntaxTypes.AMINO_ACID; }
+
+<IN_NT_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
+<IN_AA_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
+
+<YYINITIAL> {COMMENT}          { return BioSyntaxTypes.COMMENT; }
+<YYINITIAL> {PROMOTER}         { return BioSyntaxTypes.PROMOTER; }
+<YYINITIAL> {TERMINATOR}       { return BioSyntaxTypes.TERMINATOR; }
+<YYINITIAL> {START_CODON}      { return BioSyntaxTypes.START_CODON; }
+<YYINITIAL> {STOP_CODON}       { return BioSyntaxTypes.STOP_CODON; }
+
+{WHITE_SPACE}+                 { return TokenType.WHITE_SPACE; }
+[^]                           { return TokenType.BAD_CHARACTER; }
