@@ -19,8 +19,8 @@ bioFile ::= item_*
 
 private item_ ::= (property|COMMENT|CRLF)
 
-property ::= (KEY? SEPARATOR VALUE?) | (sequence) | KEY {
-    pin=3
+property ::= KEY SEPARATOR (VALUE | sequence)* {
+    pin=2
     recoverWhile="recover_property"
     mixin="org.intellij.sdk.language.psi.impl.BioSyntaxNamedElementImpl"
     implements="org.intellij.sdk.language.psi.BioSyntaxNamedElement"

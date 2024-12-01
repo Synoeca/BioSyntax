@@ -35,13 +35,13 @@ KEY_CHARACTER=[^:=\ \n\t\f\\] | "\\ "
 BASE_PAIR=[ATCG]
 AMINO_ACID=("ALA"|"ARG"|"ASN"|"ASP"|"CYS"|"GLN"|"GLU"|"GLY"|"HIS"|"ILE"|"LEU"|"LYS"|"MET"|"PHE"|"PRO"|"SER"|"THR"|"TRP"|"TYR"|"VAL")
 DNA_CODON={BASE_PAIR}{BASE_PAIR}{BASE_PAIR}
-LINE_CONTINUATION=\\[ \t]*({END_OF_LINE_COMMENT})?{CRLF}[ \t]*
+LINE_CONTINUATION=\\[ \t]*{CRLF}[ \t]*
 
 %state WAITING_VALUE
 
 %%
 
-<WAITING_VALUE> {VALUE_LINE}({LINE_CONTINUATION}{VALUE_LINE})*  { return VALUE; }
+
 <YYINITIAL> {END_OF_LINE_COMMENT}                           { return COMMENT; }
 <YYINITIAL> {KEY_CHARACTER}+                                { return KEY; }
 <YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return SEPARATOR; }
@@ -49,6 +49,10 @@ LINE_CONTINUATION=\\[ \t]*({END_OF_LINE_COMMENT})?{CRLF}[ \t]*
 <YYINITIAL> {BASE_PAIR}                                    { return BASE_PAIR; }
 <YYINITIAL> {AMINO_ACID}                                   { return AMINO_ACID; }
 
+<WAITING_VALUE> {VALUE_LINE}({LINE_CONTINUATION}{VALUE_LINE})*  {
+  yybegin(YYINITIAL);
+  return VALUE;
+}
 <WAITING_VALUE> {WHITE_SPACE}+                              { yybegin(WAITING_VALUE); return WHITE_SPACE; }
 <WAITING_VALUE> {LINE_CONTINUATION}                         { yybegin(WAITING_VALUE); }
 <WAITING_VALUE> {END_OF_LINE_COMMENT}                       { yybegin(YYINITIAL); return COMMENT; }
