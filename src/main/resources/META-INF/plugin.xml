@@ -1,0 +1,72 @@
+<!-- Copyright 2000-2023 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license. -->
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+
+<idea-plugin>
+
+  <!-- Unique id for this plugin. Must stay constant for the life of the plugin. -->
+  <id>org.intellij.sdk.language</id>
+
+  <!-- Text to display as name on Settings | Plugin page -->
+  <name>BioSyntax: A Genomic Compiler</name>
+
+  <!-- Product and plugin compatibility requirements -->
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.java</depends>
+
+  <!-- Text to display as description on Settings | Plugin page -->
+  <description>
+    <![CDATA[
+      BioSyntax extends compiler concepts to genomic analysis, offering:
+      • DNA sequence parsing and tokenization
+      • Abstract Syntax Tree (AST) for gene structures
+      • Syntax highlighting for genetic elements
+      • Code completion for common sequences
+      • Static analysis of gene functions and interactions
+      • Visualization of genetic structures
+    ]]>
+  </description>
+  <change-notes>
+    <![CDATA[
+      <ul>
+        <li><b>2.0.0</b> Convert to Gradle-based plugin.</li>
+        <li><b>1.0.0</b> Release 2018.3 and earlier.</li>
+      </ul>
+    ]]>
+  </change-notes>
+
+  <!-- Text to display as company information on Settings | Plugin page -->
+  <vendor url="https://plugins.jetbrains.com">IntelliJ Platform SDK</vendor>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <fileType name="BioSyntax File" implementationClass="org.intellij.sdk.language.BioSyntaxFileType" fieldName="INSTANCE"
+              language="BioSyntax" extensions="biosyntax"/>
+    <lang.parserDefinition language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxParserDefinition"/>
+    <lang.syntaxHighlighterFactory language="BioSyntax"
+                                   implementationClass="org.intellij.sdk.language.BioSyntaxSyntaxHighlighterFactory"/>
+    <iconProvider implementation="org.intellij.sdk.language.BioSyntaxPropertyIconProvider"/>
+    <colorSettingsPage implementation="org.intellij.sdk.language.BioSyntaxColorSettingsPage"/>
+    <annotator language="JAVA" implementationClass="org.intellij.sdk.language.BioSyntaxAnnotator"/>
+    <codeInsight.lineMarkerProvider language="JAVA"
+                                    implementationClass="org.intellij.sdk.language.BioSyntaxLineMarkerProvider"/>
+    <completion.contributor language="BioSyntax"
+                            implementationClass="org.intellij.sdk.language.BioSyntaxCompletionContributor"/>
+    <psi.referenceContributor language="JAVA"
+                              implementation="org.intellij.sdk.language.BioSyntaxReferenceContributor"/>
+    <lang.refactoringSupport language="BioSyntax"
+                             implementationClass="org.intellij.sdk.language.BioSyntaxRefactoringSupportProvider"/>
+    <lang.findUsagesProvider language="BioSyntax"
+                             implementationClass="org.intellij.sdk.language.BioSyntaxFindUsagesProvider"/>
+    <lang.foldingBuilder language="JAVA" implementationClass="org.intellij.sdk.language.BioSyntaxFoldingBuilder"/>
+    <gotoSymbolContributor implementation="org.intellij.sdk.language.BioSyntaxChooseByNameContributor"/>
+    <lang.psiStructureViewFactory language="BioSyntax"
+                                  implementationClass="org.intellij.sdk.language.BioSyntaxStructureViewFactory"/>
+    <navbar implementation="org.intellij.sdk.language.BioSyntaxStructureAwareNavbar"/>
+    <lang.formatter language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxFormattingModelBuilder"/>
+    <codeStyleSettingsProvider implementation="org.intellij.sdk.language.BioSyntaxCodeStyleSettingsProvider"/>
+    <langCodeStyleSettingsProvider implementation="org.intellij.sdk.language.BioSyntaxLanguageCodeStyleSettingsProvider"/>
+    <lang.commenter language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxCommenter"/>
+    <lang.documentationProvider language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxDocumentationProvider"/>
+    <spellchecker.support language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxSpellcheckingStrategy"/>
+  </extensions>
+
+</idea-plugin>
