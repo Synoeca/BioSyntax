@@ -39,34 +39,10 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <fileType name="BioSyntax File" implementationClass="org.intellij.sdk.language.BioSyntaxFileType" fieldName="INSTANCE"
-              language="BioSyntax" extensions="biosyntax"/>
-    <lang.parserDefinition language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxParserDefinition"/>
-    <lang.syntaxHighlighterFactory language="BioSyntax"
-                                   implementationClass="org.intellij.sdk.language.BioSyntaxSyntaxHighlighterFactory"/>
-    <iconProvider implementation="org.intellij.sdk.language.BioSyntaxPropertyIconProvider"/>
-    <colorSettingsPage implementation="org.intellij.sdk.language.BioSyntaxColorSettingsPage"/>
-    <annotator language="JAVA" implementationClass="org.intellij.sdk.language.BioSyntaxAnnotator"/>
-    <codeInsight.lineMarkerProvider language="JAVA"
-                                    implementationClass="org.intellij.sdk.language.BioSyntaxLineMarkerProvider"/>
-    <completion.contributor language="BioSyntax"
-                            implementationClass="org.intellij.sdk.language.BioSyntaxCompletionContributor"/>
-    <psi.referenceContributor language="JAVA"
-                              implementation="org.intellij.sdk.language.BioSyntaxReferenceContributor"/>
-    <lang.refactoringSupport language="BioSyntax"
-                             implementationClass="org.intellij.sdk.language.BioSyntaxRefactoringSupportProvider"/>
-    <lang.findUsagesProvider language="BioSyntax"
-                             implementationClass="org.intellij.sdk.language.BioSyntaxFindUsagesProvider"/>
-    <lang.foldingBuilder language="JAVA" implementationClass="org.intellij.sdk.language.BioSyntaxFoldingBuilder"/>
-    <gotoSymbolContributor implementation="org.intellij.sdk.language.BioSyntaxChooseByNameContributor"/>
-    <lang.psiStructureViewFactory language="BioSyntax"
-                                  implementationClass="org.intellij.sdk.language.BioSyntaxStructureViewFactory"/>
-    <navbar implementation="org.intellij.sdk.language.BioSyntaxStructureAwareNavbar"/>
-    <lang.formatter language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxFormattingModelBuilder"/>
-    <codeStyleSettingsProvider implementation="org.intellij.sdk.language.BioSyntaxCodeStyleSettingsProvider"/>
-    <langCodeStyleSettingsProvider implementation="org.intellij.sdk.language.BioSyntaxLanguageCodeStyleSettingsProvider"/>
-    <lang.commenter language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxCommenter"/>
-    <lang.documentationProvider language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxDocumentationProvider"/>
-    <spellchecker.support language="BioSyntax" implementationClass="org.intellij.sdk.language.BioSyntaxSpellcheckingStrategy"/>
+              language="BioSyntax" extensions="bsyn"/>
+    <lang.parserDefinition
+            language="BioSyntax"
+            implementationClass="org.intellij.sdk.language.BioSyntaxParserDefinition"/>
   </extensions>
 
 </idea-plugin>

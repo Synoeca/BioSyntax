@@ -1,0 +1,25 @@
+package org.intellij.sdk.language.psi;
+
+import com.intellij.psi.tree.TokenSet;
+
+public interface BioSyntaxTokenSets {
+    TokenSet NUCLEOTIDES = TokenSet.create(
+            BioSyntaxTypes.ADENINE,
+            BioSyntaxTypes.THYMINE,
+            BioSyntaxTypes.GUANINE,
+            BioSyntaxTypes.CYTOSINE,
+            BioSyntaxTypes.URACIL
+    );
+
+    TokenSet REGULATORY_ELEMENTS = TokenSet.create(
+            BioSyntaxTypes.PROMOTER,
+            BioSyntaxTypes.TERMINATOR
+    );
+
+    TokenSet CODONS = TokenSet.create(
+            BioSyntaxTypes.START_CODON,
+            BioSyntaxTypes.STOP_CODON
+    );
+
+    TokenSet COMMENTS = TokenSet.create(BioSyntaxTypes.COMMENT);
+}
