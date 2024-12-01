@@ -43,6 +43,11 @@
     <lang.parserDefinition
             language="BioSyntax"
             implementationClass="org.intellij.sdk.language.BioSyntaxParserDefinition"/>
+    <lang.syntaxHighlighterFactory
+            language="BioSyntax"
+            implementationClass="org.intellij.sdk.language.BioSyntaxSyntaxHighlighterFactory"/>
+    <colorSettingsPage
+            implementation="org.intellij.sdk.language.BioSyntaxColorSettingsPage"/>
   </extensions>
 
 </idea-plugin>
