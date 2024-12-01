@@ -10,27 +10,31 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-/**
- * TODO Please note, it is recommended to utilize the new DocumentationTarget API for
- * plugins targeting IntelliJ Platform version 2023.1 or later.
- *
- * @see <a href="https://plugins.jetbrains.com/docs/intellij/documentation.html">Documentation (IntelliJ Platform Docs)</a>
- */
 final class BioSyntaxDocumentationProvider extends AbstractDocumentationProvider {
 
-  /**
-   * For the BioSyntax Language, we don't have online documentation. However, if your language provides
-   * references pages online, URLs for the element can be returned here.
-   */
-  @Override
-  public @Nullable List<String> getUrlFor(PsiElement element, PsiElement originalElement) {
-    return null;
+    private String determineSequenceType(String value) {
+    if (value == null || value.isEmpty()) return "Property";
+
+    // Check for DNA sequence (ATCG pattern)
+    if (value.matches("[ATCG\\s]+")) return "DNA Sequence";
+
+    // Check for RNA sequence (AUCG pattern)
+    if (value.matches("[AUCG\\s]+")) return "RNA Sequence";
+
+    // Check for Amino Acid sequence
+    if (value.matches("(ALA|ARG|ASN|ASP|CYS|GLN|GLU|GLY|HIS|ILE|LEU|LYS|MET|PHE|PRO|SER|THR|TRP|TYR|VAL|\\s)+"))
+      return "Protein Sequence";
+
+    // Check for known property types
+    if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false"))
+      return "Boolean Property";
+
+    if (value.matches("-?\\d+(\\.\\d+)?"))
+      return "Numeric Property";
+
+    return "BioSyntax Property";
   }
 
-  /**
-   * Extracts the key, value, file and documentation comment of a BioSyntax key/value entry and returns
-   * a formatted representation of the information.
-   */
   @Override
   public @Nullable String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
     if (element instanceof BioSyntaxProperty) {
@@ -38,36 +42,30 @@ final class BioSyntaxDocumentationProvider extends AbstractDocumentationProvider
       final String value = String.valueOf(((BioSyntaxProperty) element).getValue());
       final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
       final String docComment = BioSyntaxUtil.findDocumentationComment((BioSyntaxProperty) element);
+      final String type = determineSequenceType(value);
 
-      return renderFullDoc(key, value, file, docComment);
+      return renderFullDoc(type, key, value, file, docComment);
     }
     return null;
   }
 
-  /**
-   * Provides the information in which file the BioSyntax language key/value is defined.
-   */
   @Override
   public @Nullable String getQuickNavigateInfo(PsiElement element, PsiElement originalElement) {
     if (element instanceof BioSyntaxProperty) {
       final String key = String.valueOf(((BioSyntaxProperty) element).getKey());
+      final String value = String.valueOf(((BioSyntaxProperty) element).getValue());
+      final String type = determineSequenceType(value);
       final String file = SymbolPresentationUtil.getFilePathPresentation(element.getContainingFile());
-      return "\"" + key + "\" in " + file;
+      return type + " \"" + key + "\" in " + file;
     }
     return null;
   }
 
-  /**
-   * Provides documentation when a BioSyntax Language element is hovered with the mouse.
-   */
   @Override
   public @Nullable String generateHoverDoc(@NotNull PsiElement element, @Nullable PsiElement originalElement) {
     return generateDoc(element, originalElement);
   }
 
-  /**
-   * Creates a key/value row for the rendered documentation.
-   */
   private void addKeyValueSection(String key, String value, StringBuilder sb) {
     sb.append(DocumentationMarkup.SECTION_HEADER_START);
     sb.append(key);
@@ -77,20 +75,16 @@ final class BioSyntaxDocumentationProvider extends AbstractDocumentationProvider
     sb.append(DocumentationMarkup.SECTION_END);
   }
 
-  /**
-   * Creates the formatted documentation using {@link DocumentationMarkup}. See the Java doc of
-   * {@link com.intellij.lang.documentation.DocumentationProvider#generateDoc(PsiElement, PsiElement)} for more
-   * information about building the layout.
-   */
-  private String renderFullDoc(String key, String value, String file, String docComment) {
+  private String renderFullDoc(String type, String key, String value, String file, String docComment) {
     StringBuilder sb = new StringBuilder();
     sb.append(DocumentationMarkup.DEFINITION_START);
-    sb.append("BioSyntax Property");
+    sb.append(type);
     sb.append(DocumentationMarkup.DEFINITION_END);
     sb.append(DocumentationMarkup.CONTENT_START);
     sb.append(value);
     sb.append(DocumentationMarkup.CONTENT_END);
     sb.append(DocumentationMarkup.SECTIONS_START);
+    addKeyValueSection("Type:", type, sb);
     addKeyValueSection("Key:", key, sb);
     addKeyValueSection("Value:", value, sb);
     addKeyValueSection("File:", file, sb);
@@ -98,5 +92,4 @@ final class BioSyntaxDocumentationProvider extends AbstractDocumentationProvider
     sb.append(DocumentationMarkup.SECTIONS_END);
     return sb.toString();
   }
-
 }

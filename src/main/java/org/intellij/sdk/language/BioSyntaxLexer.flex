@@ -36,12 +36,15 @@ BASE_PAIR=[ATCG]
 AMINO_ACID=("ALA"|"ARG"|"ASN"|"ASP"|"CYS"|"GLN"|"GLU"|"GLY"|"HIS"|"ILE"|"LEU"|"LYS"|"MET"|"PHE"|"PRO"|"SER"|"THR"|"TRP"|"TYR"|"VAL")
 DNA_CODON={BASE_PAIR}{BASE_PAIR}{BASE_PAIR}
 LINE_CONTINUATION=\\[ \t]*{CRLF}[ \t]*
+DNA_SEQ="DNASeq"
+ID=[a-zA-Z][a-zA-Z0-9_]*
 
 %state WAITING_VALUE
 
 %%
 
-
+<YYINITIAL> {DNA_SEQ}                                       { return DNA_SEQ; }
+<YYINITIAL> {ID}                                           { return KEY; }
 <YYINITIAL> {END_OF_LINE_COMMENT}                           { return COMMENT; }
 <YYINITIAL> {KEY_CHARACTER}+                                { return KEY; }
 <YYINITIAL> {SEPARATOR}                                     { yybegin(WAITING_VALUE); return SEPARATOR; }

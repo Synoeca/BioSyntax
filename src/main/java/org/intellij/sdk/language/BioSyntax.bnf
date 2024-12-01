@@ -15,23 +15,33 @@
   psiImplUtilClass="org.intellij.sdk.language.psi.impl.BioSyntaxPsiImplUtil"
 }
 
-bioFile ::= item_*
+bioFile ::= item*
 
-private item_ ::= (property|COMMENT|CRLF)
+item ::= property | dna_declaration | COMMENT | CRLF
 
-property ::= KEY SEPARATOR (VALUE | sequence)* {
-    pin=2
-    recoverWhile="recover_property"
-    mixin="org.intellij.sdk.language.psi.impl.BioSyntaxNamedElementImpl"
-    implements="org.intellij.sdk.language.psi.BioSyntaxNamedElement"
-    methods=[getKey getValue getName setName getNameIdentifier getPresentation]
+property ::= (KEY | ID) SEPARATOR (VALUE | sequence)* {
+   pin=2
+   recoverWhile="recover_property"
+   mixin="org.intellij.sdk.language.psi.impl.BioSyntaxNamedElementImpl"
+   implements="org.intellij.sdk.language.psi.BioSyntaxNamedElement"
+   methods=[getKey getValue getName setName getNameIdentifier getPresentation]
 }
 
-sequence ::= protein_sequence|dna_sequence
+dna_declaration ::= DNA_SEQ ID SEPARATOR dna_sequence SEMICOLON {
+    mixin="org.intellij.sdk.language.psi.impl.BioSyntaxDNASequenceImpl"
+    implements="org.intellij.sdk.language.psi.BioSyntaxDNASequence"
+}
 
-dna_sequence ::= codon+
-codon ::= BASE_PAIR BASE_PAIR BASE_PAIR
+dna_sequence ::= valid_dna_sequence | invalid_dna_sequence {
+   mixin="org.intellij.sdk.language.psi.impl.BioSyntaxDNASequenceImpl"
+   implements="org.intellij.sdk.language.psi.BioSyntaxDNASequence"
+}
+
+valid_dna_sequence ::= BASE_PAIR+
+invalid_dna_sequence ::= (BASE_PAIR | INVALID_BASE_PAIR)+
+
+sequence ::= protein_sequence | dna_sequence
 
 protein_sequence ::= AMINO_ACID+
 
-private recover_property ::= !(KEY|SEPARATOR|COMMENT)
+private recover_property ::= !(KEY | SEPARATOR | COMMENT)
