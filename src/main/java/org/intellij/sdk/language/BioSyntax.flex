@@ -47,6 +47,14 @@ GENE="Gene"
 LBRACE="{"
 RBRACE="}"
 
+// Gene properties
+PROMOTER="Promoter"
+START_CODON="Start_Codon"
+CODING_SEQUENCE="Coding_Sequence"
+STOP_CODON="Stop_Codon"
+TERMINATOR="Terminator"
+SEMICOLON=";"
+
 %state IN_NT_STRING, IN_AA_STRING IN_GENE_BODY
 
 %%
@@ -74,13 +82,18 @@ RBRACE="}"
 <IN_NT_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
 <IN_AA_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
 
-<IN_GENE_BODY> {START_CODON}    { return BioSyntaxTypes.START_CODON; }
-<IN_GENE_BODY> {STOP_CODON}     { return BioSyntaxTypes.STOP_CODON; }
-<IN_GENE_BODY> {NUCLEOTIDE}+    { return BioSyntaxTypes.NUCLEOTIDE; }
 <IN_GENE_BODY> {PROMOTER}       { return BioSyntaxTypes.PROMOTER; }
+<IN_GENE_BODY> {START_CODON}    { return BioSyntaxTypes.START_CODON; }
+<IN_GENE_BODY> {CODING_SEQUENCE} { return BioSyntaxTypes.CODING_SEQUENCE; }
+<IN_GENE_BODY> {STOP_CODON}     { return BioSyntaxTypes.STOP_CODON; }
 <IN_GENE_BODY> {TERMINATOR}     { return BioSyntaxTypes.TERMINATOR; }
-<IN_GENE_BODY> {COMMENT}        { return BioSyntaxTypes.COMMENT; }
-<IN_GENE_BODY> {RBRACE}        { yybegin(YYINITIAL); return BioSyntaxTypes.RBRACE; }
+<IN_GENE_BODY> {EQUALS}         { return BioSyntaxTypes.EQUALS; }
+<IN_GENE_BODY> {QUOTE}          { return BioSyntaxTypes.QUOTE; }
+<IN_GENE_BODY> {SEMICOLON}      { return BioSyntaxTypes.SEMICOLON; }
+<IN_GENE_BODY> {NUCLEOTIDE}+    { return BioSyntaxTypes.NUCLEOTIDE; }
+<IN_GENE_BODY> {AMINO_ACID}+    { return BioSyntaxTypes.AMINO_ACID; }
+<IN_GENE_BODY> {RBRACE}         { yybegin(YYINITIAL); return BioSyntaxTypes.RBRACE; }
+
 
 {WHITE_SPACE}+                  { return TokenType.WHITE_SPACE; }
 [^]                            { return TokenType.BAD_CHARACTER; }
