@@ -33,10 +33,10 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
 
         if (isGeneClass(element)) {
             System.out.println("Detected Gene class for element: " + element.getText());
-            renderGeneDoc(element, sb); // Render the Gene class documentation
+            renderGeneDoc(element, sb);
         } else if (element instanceof BioSyntaxDeclaration) {
             System.out.println("Detected BioSyntaxDeclaration for element: " + element.getText());
-            renderSequenceDoc(element, (BioSyntaxDeclaration) element, sb); // Render NtSeq or AASeq documentation
+            renderSequenceDoc(element, (BioSyntaxDeclaration) element, sb);
         } else {
             System.out.println("Element did not match any known types.");
         }
@@ -75,7 +75,7 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
             String value;
             if (parts.length > 1) {
                 String potentialValue = parts[1].trim();
-                // Remove surrounding quotes and handle empty or invalid values
+
                 value = potentialValue.replaceAll("^\"|\"$", "");
                 if (value.isEmpty() || value.equals(";")) {
                     value = "unspecified";
@@ -84,7 +84,7 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
                 value = "unspecified";
             }
 
-            addKeyValueSection(key, value, sb); // Use addKeyValueSection to format key-value pairs
+            addKeyValueSection(key, value, sb);
         }
 
         if (!hasProperties) {
@@ -102,20 +102,15 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
         String name = extractName(node);
         String sequence = extractSequence(node);
 
-        // Start building the documentation
         sb.append(DocumentationMarkup.DEFINITION_START);
         sb.append(type).append(" Definition");
         sb.append(DocumentationMarkup.DEFINITION_END);
         sb.append(DocumentationMarkup.CONTENT_START);
 
-        // Add standard entries
         addKeyValueSection("Name:", name, sb);
         addKeyValueSection("Type:", type, sb);
-
-        // Add sequence information
         addKeyValueSection("Sequence:", sequence.isEmpty() ? "unspecified" : sequence, sb);
 
-        // Additional descriptions based on type
         if (type.equals("NtSeq")) {
             addKeyValueSection("Description:", "Nucleotide sequence (DNA) that represents the genetic code.", sb);
         } else if (type.equals("AASeq")) {
@@ -167,7 +162,6 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
         sb.append(key);
         sb.append(DocumentationMarkup.SECTION_SEPARATOR);
 
-        // Use a paragraph tag for better formatting without margins
         sb.append("<p style='margin: 0;'>");
         sb.append(value);
         sb.append("</p>");
@@ -196,12 +190,10 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
                                                               @Nullable PsiElement context,
                                                               int targetOffset) {
         if (context != null) {
-            // Try to find Gene definition first
             PsiElement geneDefinition = PsiTreeUtil.getParentOfType(context, BioSyntaxGeneDefinition.class);
             if (geneDefinition != null) {
                 return geneDefinition;
             }
-            // Fall back to declaration if not a gene
             return PsiTreeUtil.getParentOfType(context, BioSyntaxDeclaration.class);
         }
         return null;
