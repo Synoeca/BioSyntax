@@ -19,7 +19,9 @@ public class BioSyntaxColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor("Elements//Identifier", BioSyntaxSyntaxHighlighter.IDENTIFIER),
             new AttributesDescriptor("Elements//Codon", BioSyntaxSyntaxHighlighter.CODON),
             new AttributesDescriptor("Comments", BioSyntaxSyntaxHighlighter.COMMENT),
-            new AttributesDescriptor("Bad Character", BioSyntaxSyntaxHighlighter.BAD_CHARACTER)
+            new AttributesDescriptor("Bad Character", BioSyntaxSyntaxHighlighter.BAD_CHARACTER),
+            new AttributesDescriptor("Gene//Keyword", BioSyntaxSyntaxHighlighter.GENE),
+            new AttributesDescriptor("Gene//Property", BioSyntaxSyntaxHighlighter.GENE_PROPERTY)
     };
 
     @Override
@@ -41,12 +43,21 @@ public class BioSyntaxColorSettingsPage implements ColorSettingsPage {
             NtSeq dnaSeq = "ATCG"
             AASeq proteinSeq = "MGKL"
             
-            promoter
-            ATG // Start codon
-            GCTCTTAAGGCT
-            ACTGGTCTAGCT
-            TAA // Stop codon
-            terminator
+            Gene exampleGene {
+                Promoter = "TATAAA"
+                Start_Codon = "ATG"
+                Coding_Sequence = "GCTCTTAAGGCTACTGGTCTAGCT"
+                Stop_Codon = "TAA"
+                Terminator = "AATAAA"
+            }
+            
+            Gene minimalGene {
+                Promoter;
+                Start_Codon = "ATG"
+                Coding_Sequence = "ATCGGCT"
+                Stop_Codon = "TGA"
+                Terminator;
+            }
             """;
     }
 
