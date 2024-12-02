@@ -57,6 +57,9 @@
     <completion.contributor
             language="BioSyntax"
             implementationClass="org.intellij.sdk.language.BioSyntaxCompletionContributor"/>
+    <lang.documentationProvider
+            language="BioSyntax"
+            implementationClass="org.intellij.sdk.language.BioSyntaxDocumentationProvider"/>
   </extensions>
 
 </idea-plugin>

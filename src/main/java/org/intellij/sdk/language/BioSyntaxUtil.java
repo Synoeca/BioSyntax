@@ -1,8 +1,13 @@
 package org.intellij.sdk.language;
 
+import com.google.common.collect.Lists;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiComment;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiManager;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.search.FileTypeIndex;
 import com.intellij.psi.search.GlobalSearchScope;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -53,5 +58,25 @@ public class BioSyntaxUtil {
             }
         }
         return result;
+    }
+
+    @NotNull
+    public static String findDocumentationComment(PsiElement element) {
+        List<String> comments = new ArrayList<>();
+        PsiElement current = element.getPrevSibling();
+
+        while (current != null) {
+            if (current instanceof PsiComment) {
+                String commentText = current.getText().replaceFirst("//\\s*", ""); // Remove leading "// "
+                comments.add(commentText);
+            } else if (!(current instanceof PsiWhiteSpace)) {
+                // Stop if we encounter a non-comment and non-whitespace element
+                break;
+            }
+            current = current.getPrevSibling();
+        }
+
+        // Reverse the list to maintain the order of comments and join them into a single string
+        return comments.isEmpty() ? "" : StringUtil.join(comments, "\n");
     }
 }
