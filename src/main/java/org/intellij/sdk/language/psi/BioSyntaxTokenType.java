@@ -6,6 +6,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
 public class BioSyntaxTokenType extends IElementType {
+    public static final BioSyntaxTokenType GENE = new BioSyntaxTokenType("GENE");
+    public static final BioSyntaxTokenType LBRACE = new BioSyntaxTokenType("LBRACE");
+    public static final BioSyntaxTokenType RBRACE = new BioSyntaxTokenType("RBRACE");
     // Type system
     public static final BioSyntaxTokenType NT_SEQ = new BioSyntaxTokenType("NT_SEQ");
     public static final BioSyntaxTokenType AA_SEQ = new BioSyntaxTokenType("AA_SEQ");

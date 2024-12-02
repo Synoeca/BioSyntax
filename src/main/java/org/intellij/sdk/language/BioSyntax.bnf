@@ -1,28 +1,29 @@
 {
   parserClass="org.intellij.sdk.language.parser.BioSyntaxParser"
   extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
-
   psiClassPrefix="BioSyntax"
   psiImplClassSuffix="Impl"
   psiPackage="org.intellij.sdk.language.psi"
   psiImplPackage="org.intellij.sdk.language.psi.impl"
-
   elementTypeHolderClass="org.intellij.sdk.language.psi.BioSyntaxTypes"
   elementTypeClass="org.intellij.sdk.language.psi.BioSyntaxElementType"
   tokenTypeClass="org.intellij.sdk.language.psi.BioSyntaxTokenType"
+  psiImplUtilClass="org.intellij.sdk.language.psi.impl.BioSyntaxPsiImplUtil"
 }
 
 bioSyntaxFile ::= item_*
 
-private item_ ::= (declaration|gene|COMMENT|CRLF)
+private item_ ::= (declaration|geneDefinition|COMMENT|CRLF)
 
-declaration ::= nt_declaration | aa_declaration
+declaration ::= (nt_declaration|aa_declaration) {
+  methods=[getSequenceText getIdentifier getName]
+}
 
 nt_declaration ::= NT_SEQ IDENTIFIER EQUALS QUOTE NUCLEOTIDE+ QUOTE
 aa_declaration ::= AA_SEQ IDENTIFIER EQUALS QUOTE AMINO_ACID+ QUOTE
 
-gene ::= PROMOTER? codon_block TERMINATOR?
-codon_block ::= START_CODON dna_content* STOP_CODON
-dna_content ::= (sequence|COMMENT|CRLF)+
-sequence ::= NUCLEOTIDE+
-nucleotides ::= ADENINE | THYMINE | GUANINE | CYTOSINE | URACIL
+geneDefinition ::= GENE IDENTIFIER LBRACE geneBody RBRACE {
+  methods=[getName getGeneStructure]
+}
+
+geneBody ::= PROMOTER? START_CODON (NUCLEOTIDE|COMMENT|CRLF)* STOP_CODON TERMINATOR?

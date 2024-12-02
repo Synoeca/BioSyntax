@@ -8,14 +8,6 @@ public interface BioSyntaxTokenSets {
             BioSyntaxTypes.AA_SEQ
     );
 
-    TokenSet NUCLEOTIDES = TokenSet.create(
-            BioSyntaxTypes.ADENINE,
-            BioSyntaxTypes.THYMINE,
-            BioSyntaxTypes.GUANINE,
-            BioSyntaxTypes.CYTOSINE,
-            BioSyntaxTypes.URACIL
-    );
-
     TokenSet REGULATORY_ELEMENTS = TokenSet.create(
             BioSyntaxTypes.PROMOTER,
             BioSyntaxTypes.TERMINATOR

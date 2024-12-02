@@ -13,7 +13,7 @@ import com.intellij.psi.TokenType;
 %function advance
 %type IElementType
 %{
-  private IElementType prevToken;
+  private IElementType seqType = null;
 %}
 
 %eof{  return;
@@ -40,40 +40,47 @@ QUOTE=\"
 NT_SEQ="NtSeq"
 AA_SEQ="AASeq"
 
-%state IN_NT_STRING, IN_AA_STRING
+// Keywords
+GENE="Gene"
 
-%{
-  private IElementType seqType = null;
-%}
+// Braces
+LBRACE="{"
+RBRACE="}"
 
+%state IN_NT_STRING, IN_AA_STRING IN_GENE_BODY
 
 %%
+
 <YYINITIAL> {NT_SEQ}            { seqType = BioSyntaxTypes.NT_SEQ; return BioSyntaxTypes.NT_SEQ; }
 <YYINITIAL> {AA_SEQ}            { seqType = BioSyntaxTypes.AA_SEQ; return BioSyntaxTypes.AA_SEQ; }
+<YYINITIAL> {GENE}              { return BioSyntaxTypes.GENE; }
 <YYINITIAL> {IDENTIFIER}        { return BioSyntaxTypes.IDENTIFIER; }
-<YYINITIAL> {EQUALS}           { return BioSyntaxTypes.EQUALS; }
+<YYINITIAL> {EQUALS}            { return BioSyntaxTypes.EQUALS; }
+<YYINITIAL> {LBRACE}            { yybegin(IN_GENE_BODY); return BioSyntaxTypes.LBRACE; }
+<YYINITIAL> {RBRACE}            { yybegin(YYINITIAL); return BioSyntaxTypes.RBRACE; }
 
-<YYINITIAL> {QUOTE}            {
-    if (seqType == BioSyntaxTypes.NT_SEQ) {
-        yybegin(IN_NT_STRING);
-    } else if (seqType == BioSyntaxTypes.AA_SEQ) {
-        yybegin(IN_AA_STRING);
-    }
-    return BioSyntaxTypes.QUOTE;
+<YYINITIAL> {QUOTE}             {
+   if (seqType == BioSyntaxTypes.NT_SEQ) {
+       yybegin(IN_NT_STRING);
+   } else if (seqType == BioSyntaxTypes.AA_SEQ) {
+       yybegin(IN_AA_STRING);
+   }
+   return BioSyntaxTypes.QUOTE;
 }
+<YYINITIAL> {COMMENT}           { return BioSyntaxTypes.COMMENT; }
 
-
-<IN_NT_STRING> {NUCLEOTIDE}+          { return BioSyntaxTypes.NUCLEOTIDE; }
+<IN_NT_STRING> {NUCLEOTIDE}+    { return BioSyntaxTypes.NUCLEOTIDE; }
 <IN_AA_STRING> {AMINO_ACID}+    { return BioSyntaxTypes.AMINO_ACID; }
-
 <IN_NT_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
 <IN_AA_STRING> {QUOTE}          { yybegin(YYINITIAL); return BioSyntaxTypes.QUOTE; }
 
-<YYINITIAL> {COMMENT}          { return BioSyntaxTypes.COMMENT; }
-<YYINITIAL> {PROMOTER}         { return BioSyntaxTypes.PROMOTER; }
-<YYINITIAL> {TERMINATOR}       { return BioSyntaxTypes.TERMINATOR; }
-<YYINITIAL> {START_CODON}      { return BioSyntaxTypes.START_CODON; }
-<YYINITIAL> {STOP_CODON}       { return BioSyntaxTypes.STOP_CODON; }
+<IN_GENE_BODY> {START_CODON}    { return BioSyntaxTypes.START_CODON; }
+<IN_GENE_BODY> {STOP_CODON}     { return BioSyntaxTypes.STOP_CODON; }
+<IN_GENE_BODY> {NUCLEOTIDE}+    { return BioSyntaxTypes.NUCLEOTIDE; }
+<IN_GENE_BODY> {PROMOTER}       { return BioSyntaxTypes.PROMOTER; }
+<IN_GENE_BODY> {TERMINATOR}     { return BioSyntaxTypes.TERMINATOR; }
+<IN_GENE_BODY> {COMMENT}        { return BioSyntaxTypes.COMMENT; }
+<IN_GENE_BODY> {RBRACE}        { yybegin(YYINITIAL); return BioSyntaxTypes.RBRACE; }
 
-{WHITE_SPACE}+                 { return TokenType.WHITE_SPACE; }
-[^]                           { return TokenType.BAD_CHARACTER; }
+{WHITE_SPACE}+                  { return TokenType.WHITE_SPACE; }
+[^]                            { return TokenType.BAD_CHARACTER; }
