@@ -20,4 +20,14 @@ public class BioSyntaxPsiImplUtil {
     public static String getName(BioSyntaxDeclaration element) {
         return getIdentifier(element);
     }
+
+    public static String getName(BioSyntaxGeneDefinition element) {
+        ASTNode idNode = element.getNode().findChildByType(BioSyntaxTypes.IDENTIFIER);
+        return idNode != null ? idNode.getText() : null;
+    }
+
+    public static String getGeneStructure(BioSyntaxGeneDefinition element) {
+        BioSyntaxGeneBody body = element.getGeneBody();
+        return body != null ? body.getText() : null;
+    }
 }
