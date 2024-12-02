@@ -51,6 +51,9 @@
     <annotator
             language="JAVA"
             implementationClass="org.intellij.sdk.language.BioSyntaxAnnotator"/>
+    <codeInsight.lineMarkerProvider
+            language="JAVA"
+            implementationClass="org.intellij.sdk.language.BioSyntaxLineMarkerProvider"/>
   </extensions>
 
 </idea-plugin>
