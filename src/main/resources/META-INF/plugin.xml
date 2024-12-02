@@ -48,6 +48,9 @@
             implementationClass="org.intellij.sdk.language.BioSyntaxSyntaxHighlighterFactory"/>
     <colorSettingsPage
             implementation="org.intellij.sdk.language.BioSyntaxColorSettingsPage"/>
+    <annotator
+            language="JAVA"
+            implementationClass="org.intellij.sdk.language.BioSyntaxAnnotator"/>
   </extensions>
 
 </idea-plugin>

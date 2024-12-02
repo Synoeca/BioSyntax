@@ -31,6 +31,8 @@ public class BioSyntaxSyntaxHighlighter extends SyntaxHighlighterBase {
             createTextAttributesKey("BIOSYNTAX_GENE", DefaultLanguageHighlighterColors.CLASS_NAME);
     public static final TextAttributesKey GENE_PROPERTY =
             createTextAttributesKey("BIOSYNTAX_GENE_PROPERTY", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
+    public static final TextAttributesKey PROPERTY_NAME =
+            createTextAttributesKey("BIOSYNTAX_PROPERTY_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
 
     // Token highlight arrays
     private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
@@ -40,7 +42,7 @@ public class BioSyntaxSyntaxHighlighter extends SyntaxHighlighterBase {
     private static final TextAttributesKey[] IDENTIFIER_KEYS = new TextAttributesKey[]{IDENTIFIER};
     private static final TextAttributesKey[] COMMENT_KEYS = new TextAttributesKey[]{COMMENT};
     private static final TextAttributesKey[] GENE_KEYS = new TextAttributesKey[]{GENE};
-    private static final TextAttributesKey[] GENE_PROPERTY_KEYS = new TextAttributesKey[]{GENE_PROPERTY};
+    private static final TextAttributesKey[] GENE_PROPERTY_KEYS = new TextAttributesKey[]{GENE_PROPERTY, PROPERTY_NAME};
     private static final TextAttributesKey[] EMPTY_KEYS = new TextAttributesKey[0];
 
     @NotNull
