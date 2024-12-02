@@ -54,6 +54,9 @@
     <codeInsight.lineMarkerProvider
             language="JAVA"
             implementationClass="org.intellij.sdk.language.BioSyntaxLineMarkerProvider"/>
+    <completion.contributor
+            language="BioSyntax"
+            implementationClass="org.intellij.sdk.language.BioSyntaxCompletionContributor"/>
   </extensions>
 
 </idea-plugin>
