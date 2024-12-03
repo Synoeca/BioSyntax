@@ -118,6 +118,8 @@ public class BioSyntaxCompletionContributor extends CompletionContributor {
 
     private void addGlobalCompletions(CompletionResultSet resultSet) {
         resultSet.addElement(LookupElementBuilder.create("NtSeq"));
+        resultSet.addElement(LookupElementBuilder.create("RNASeq"));
+        resultSet.addElement(LookupElementBuilder.create("DNASeq"));
         resultSet.addElement(LookupElementBuilder.create("AASeq"));
         resultSet.addElement(LookupElementBuilder.create("Gene"));
     }
