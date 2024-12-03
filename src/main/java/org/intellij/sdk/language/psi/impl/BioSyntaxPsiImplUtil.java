@@ -28,6 +28,6 @@ public class BioSyntaxPsiImplUtil {
 
     public static String getGeneStructure(BioSyntaxGeneDefinition element) {
         BioSyntaxGeneBody body = element.getGeneBody();
-        return body != null ? body.getText() : null;
+        return body.getText();
     }
 }
