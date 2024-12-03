@@ -21,24 +21,15 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
     @Override
     public @Nullable String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
         if (element == null) {
-            System.out.println("generateDoc called with null element.");
             return null;
         }
-
-        // Log the method call and element details
-        System.out.println("generateDoc method triggered.");
-        System.out.println("Element text: " + element.getText());
 
         StringBuilder sb = new StringBuilder();
 
         if (isGeneClass(element)) {
-            System.out.println("Detected Gene class for element: " + element.getText());
             renderGeneDoc(element, sb);
         } else if (element instanceof BioSyntaxDeclaration) {
-            System.out.println("Detected BioSyntaxDeclaration for element: " + element.getText());
             renderSequenceDoc(element, (BioSyntaxDeclaration) element, sb);
-        } else {
-            System.out.println("Element did not match any known types.");
         }
 
         return sb.toString();
@@ -93,7 +84,6 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
 
         getCommentAndFile(element, sb);
     }
-
 
     private void renderSequenceDoc(PsiElement element, BioSyntaxDeclaration declaration, StringBuilder sb) {
         ASTNode node = declaration.getNode();
