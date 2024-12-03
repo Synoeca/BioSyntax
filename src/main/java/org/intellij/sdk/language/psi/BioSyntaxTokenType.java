@@ -9,14 +9,13 @@ public class BioSyntaxTokenType extends IElementType {
     public static final BioSyntaxTokenType GENE = new BioSyntaxTokenType("GENE");
     public static final BioSyntaxTokenType LBRACE = new BioSyntaxTokenType("LBRACE");
     public static final BioSyntaxTokenType RBRACE = new BioSyntaxTokenType("RBRACE");
-    // Type system
+
     public static final BioSyntaxTokenType NT_SEQ = new BioSyntaxTokenType("NT_SEQ");
     public static final BioSyntaxTokenType AA_SEQ = new BioSyntaxTokenType("AA_SEQ");
     public static final BioSyntaxTokenType IDENTIFIER = new BioSyntaxTokenType("IDENTIFIER");
     public static final BioSyntaxTokenType EQUALS = new BioSyntaxTokenType("EQUALS");
     public static final BioSyntaxTokenType QUOTE = new BioSyntaxTokenType("QUOTE");
 
-    // Previous tokens remain...
     public static final BioSyntaxTokenType ADENINE = new BioSyntaxTokenType("A");
     public static final BioSyntaxTokenType THYMINE = new BioSyntaxTokenType("T");
     public static final BioSyntaxTokenType GUANINE = new BioSyntaxTokenType("G");

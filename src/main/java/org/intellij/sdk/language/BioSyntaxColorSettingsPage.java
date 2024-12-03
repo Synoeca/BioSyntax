@@ -14,6 +14,8 @@ import java.util.Map;
 public class BioSyntaxColorSettingsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] DESCRIPTORS = new AttributesDescriptor[]{
             new AttributesDescriptor("Sequences//Nucleotide", BioSyntaxSyntaxHighlighter.NUCLEOTIDE),
+            new AttributesDescriptor("Sequences//RNA Nucleotide", BioSyntaxSyntaxHighlighter.RNA_NUCLEOTIDE),
+            new AttributesDescriptor("Sequences//DNA Nucleotide", BioSyntaxSyntaxHighlighter.DNA_NUCLEOTIDE),
             new AttributesDescriptor("Sequences//Amino Acid", BioSyntaxSyntaxHighlighter.AMINO_ACID),
             new AttributesDescriptor("Types//Sequence Type", BioSyntaxSyntaxHighlighter.TYPE_DECLARATION),
             new AttributesDescriptor("Elements//Identifier", BioSyntaxSyntaxHighlighter.IDENTIFIER),
@@ -40,8 +42,10 @@ public class BioSyntaxColorSettingsPage implements ColorSettingsPage {
     public String getDemoText() {
         return """
             // Example BioSyntax file
-            NtSeq dnaSeq = "ATCG"
-            AASeq proteinSeq = "MGKL"
+            NtSeq ntseq = "ATUGC"
+            RNASeq rnaseq = "AUGC"
+            DNASeq dnaseq = "ATGC"
+            AASeq aminoacidseq = "MGKL"
             
             Gene exampleGene {
                 Promoter = "TATAAA"
