@@ -91,23 +91,47 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
         String type = extractType(node);
         String name = extractName(node);
         String sequence = extractSequence(node);
+        String fullTypeName = getFullTypeName(type);
 
         sb.append(DocumentationMarkup.DEFINITION_START);
-        sb.append(type).append(" Definition");
+        sb.append(fullTypeName).append(" Definition");
         sb.append(DocumentationMarkup.DEFINITION_END);
         sb.append(DocumentationMarkup.CONTENT_START);
 
         addKeyValueSection("Name:", name, sb);
-        addKeyValueSection("Type:", type, sb);
+        addKeyValueSection("Type:", fullTypeName, sb);
         addKeyValueSection("Sequence:", sequence.isEmpty() ? "unspecified" : sequence, sb);
 
-        if (type.equals("NtSeq")) {
-            addKeyValueSection("Description:", "Nucleotide sequence (DNA) that represents the genetic code.", sb);
-        } else if (type.equals("AASeq")) {
-            addKeyValueSection("Description:", "Amino acid sequence that represents a protein coding sequence.", sb);
-        }
+        addDescription(fullTypeName, sb);
 
         getCommentAndFile(element, sb);
+    }
+
+    private String getFullTypeName(String type) {
+        return switch (type) {
+            case "NtSeq" -> "Nucleotide Sequence";
+            case "AASeq" -> "Amino Acid Sequence";
+            case "RNASeq" -> "RNA Sequence";
+            case "DNASeq" -> "DNA Sequence";
+            default -> type;
+        };
+    }
+
+    private void addDescription(String fullTypeName, StringBuilder sb) {
+        switch (fullTypeName) {
+            case "Nucleotide Sequence":
+                addKeyValueSection("Description:", "Generic nucleotide sequence that can represent DNA or RNA.", sb);
+                break;
+            case "Amino Acid Sequence":
+                addKeyValueSection("Description:", "Amino acid sequence that represents a protein or peptide.", sb);
+                break;
+            case "RNA Sequence":
+                addKeyValueSection("Description:", "Ribonucleic acid sequence that represents RNA molecules.", sb);
+                break;
+            case "DNA Sequence":
+                addKeyValueSection("Description:", "Deoxyribonucleic acid sequence that represents DNA molecules.", sb);
+                break;
+        }
     }
 
     private void getCommentAndFile(PsiElement element, StringBuilder sb) {
