@@ -21,24 +21,15 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
     @Override
     public @Nullable String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
         if (element == null) {
-            System.out.println("generateDoc called with null element.");
             return null;
         }
-
-        // Log the method call and element details
-        System.out.println("generateDoc method triggered.");
-        System.out.println("Element text: " + element.getText());
 
         StringBuilder sb = new StringBuilder();
 
         if (isGeneClass(element)) {
-            System.out.println("Detected Gene class for element: " + element.getText());
             renderGeneDoc(element, sb);
         } else if (element instanceof BioSyntaxDeclaration) {
-            System.out.println("Detected BioSyntaxDeclaration for element: " + element.getText());
             renderSequenceDoc(element, (BioSyntaxDeclaration) element, sb);
-        } else {
-            System.out.println("Element did not match any known types.");
         }
 
         return sb.toString();
@@ -94,30 +85,53 @@ public class BioSyntaxDocumentationProvider extends AbstractDocumentationProvide
         getCommentAndFile(element, sb);
     }
 
-
     private void renderSequenceDoc(PsiElement element, BioSyntaxDeclaration declaration, StringBuilder sb) {
         ASTNode node = declaration.getNode();
 
         String type = extractType(node);
         String name = extractName(node);
         String sequence = extractSequence(node);
+        String fullTypeName = getFullTypeName(type);
 
         sb.append(DocumentationMarkup.DEFINITION_START);
-        sb.append(type).append(" Definition");
+        sb.append(fullTypeName).append(" Definition");
         sb.append(DocumentationMarkup.DEFINITION_END);
         sb.append(DocumentationMarkup.CONTENT_START);
 
         addKeyValueSection("Name:", name, sb);
-        addKeyValueSection("Type:", type, sb);
+        addKeyValueSection("Type:", fullTypeName, sb);
         addKeyValueSection("Sequence:", sequence.isEmpty() ? "unspecified" : sequence, sb);
 
-        if (type.equals("NtSeq")) {
-            addKeyValueSection("Description:", "Nucleotide sequence (DNA) that represents the genetic code.", sb);
-        } else if (type.equals("AASeq")) {
-            addKeyValueSection("Description:", "Amino acid sequence that represents a protein coding sequence.", sb);
-        }
+        addDescription(fullTypeName, sb);
 
         getCommentAndFile(element, sb);
+    }
+
+    private String getFullTypeName(String type) {
+        return switch (type) {
+            case "NtSeq" -> "Nucleotide Sequence";
+            case "AASeq" -> "Amino Acid Sequence";
+            case "RNASeq" -> "RNA Sequence";
+            case "DNASeq" -> "DNA Sequence";
+            default -> type;
+        };
+    }
+
+    private void addDescription(String fullTypeName, StringBuilder sb) {
+        switch (fullTypeName) {
+            case "Nucleotide Sequence":
+                addKeyValueSection("Description:", "Generic nucleotide sequence that can represent DNA or RNA.", sb);
+                break;
+            case "Amino Acid Sequence":
+                addKeyValueSection("Description:", "Amino acid sequence that represents a protein or peptide.", sb);
+                break;
+            case "RNA Sequence":
+                addKeyValueSection("Description:", "Ribonucleic acid sequence that represents RNA molecules.", sb);
+                break;
+            case "DNA Sequence":
+                addKeyValueSection("Description:", "Deoxyribonucleic acid sequence that represents DNA molecules.", sb);
+                break;
+        }
     }
 
     private void getCommentAndFile(PsiElement element, StringBuilder sb) {

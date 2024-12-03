@@ -15,14 +15,14 @@ bioSyntaxFile ::= item_*
 
 private item_ ::= (declaration|geneDefinition|COMMENT|CRLF)
 
-declaration ::= (nt_declaration|aa_declaration|dna_declaration|rna_declaration) {
-  methods=[getSequenceText getIdentifier getName]
+declaration ::= (nt_declaration|rna_declaration|dna_declaration|aa_declaration) {
+    methods=[getSequenceText getIdentifier getName]
 }
 
 nt_declaration ::= NT_SEQ IDENTIFIER EQUALS QUOTE NUCLEOTIDE+ QUOTE
-aa_declaration ::= AA_SEQ IDENTIFIER EQUALS QUOTE AMINO_ACID+ QUOTE
-dna_declaration ::= DNA_SEQ IDENTIFIER EQUALS QUOTE DNA_NUCLEOTIDE+ QUOTE
 rna_declaration ::= RNA_SEQ IDENTIFIER EQUALS QUOTE RNA_NUCLEOTIDE+ QUOTE
+dna_declaration ::= DNA_SEQ IDENTIFIER EQUALS QUOTE DNA_NUCLEOTIDE+ QUOTE
+aa_declaration ::= AA_SEQ IDENTIFIER EQUALS QUOTE AMINO_ACID+ QUOTE
 
 geneDefinition ::= GENE IDENTIFIER LBRACE geneBody RBRACE {
   methods=[getName getGeneStructure]

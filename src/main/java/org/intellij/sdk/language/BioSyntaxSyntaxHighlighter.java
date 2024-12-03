@@ -14,7 +14,11 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class BioSyntaxSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey NUCLEOTIDE =
-            createTextAttributesKey("BIOSYNTAX_NUCLEOTIDE", DefaultLanguageHighlighterColors.NUMBER);
+            createTextAttributesKey("BIOSYNTAX_NUCLEOTIDE", DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey RNA_NUCLEOTIDE =
+            createTextAttributesKey("BIOSYNTAX_RNA_NUCLEOTIDE", DefaultLanguageHighlighterColors.STRING);
+    public static final TextAttributesKey DNA_NUCLEOTIDE =
+            createTextAttributesKey("BIOSYNTAX_DNA_NUCLEOTIDE", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey AMINO_ACID =
             createTextAttributesKey("BIOSYNTAX_AMINO_ACID", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey TYPE_DECLARATION =
@@ -37,6 +41,8 @@ public class BioSyntaxSyntaxHighlighter extends SyntaxHighlighterBase {
     // Token highlight arrays
     private static final TextAttributesKey[] BAD_CHAR_KEYS = new TextAttributesKey[]{BAD_CHARACTER};
     private static final TextAttributesKey[] NUCLEOTIDE_KEYS = new TextAttributesKey[]{NUCLEOTIDE};
+    private static final TextAttributesKey[] RNA_NUCLEOTIDE_KEYS = new TextAttributesKey[]{RNA_NUCLEOTIDE};
+    private static final TextAttributesKey[] DNA_NUCLEOTIDE_KEYS = new TextAttributesKey[]{DNA_NUCLEOTIDE};
     private static final TextAttributesKey[] AMINO_ACID_KEYS = new TextAttributesKey[]{AMINO_ACID};
     private static final TextAttributesKey[] TYPE_KEYS = new TextAttributesKey[]{TYPE_DECLARATION};
     private static final TextAttributesKey[] IDENTIFIER_KEYS = new TextAttributesKey[]{IDENTIFIER};
@@ -56,10 +62,19 @@ public class BioSyntaxSyntaxHighlighter extends SyntaxHighlighterBase {
         if (tokenType.equals(BioSyntaxTypes.NUCLEOTIDE)) {
             return NUCLEOTIDE_KEYS;
         }
+        if (tokenType.equals(BioSyntaxTypes.RNA_NUCLEOTIDE)) {
+            return RNA_NUCLEOTIDE_KEYS;
+        }
+        if (tokenType.equals(BioSyntaxTypes.DNA_NUCLEOTIDE)) {
+            return DNA_NUCLEOTIDE_KEYS;
+        }
         if (tokenType.equals(BioSyntaxTypes.AMINO_ACID)) {
             return AMINO_ACID_KEYS;
         }
-        if (tokenType.equals(BioSyntaxTypes.NT_SEQ) || tokenType.equals(BioSyntaxTypes.AA_SEQ)) {
+        if (tokenType.equals(BioSyntaxTypes.NT_SEQ) ||
+                tokenType.equals(BioSyntaxTypes.RNA_SEQ) ||
+                tokenType.equals(BioSyntaxTypes.DNA_SEQ) ||
+                tokenType.equals(BioSyntaxTypes.AA_SEQ)) {
             return TYPE_KEYS;
         }
         if (tokenType.equals(BioSyntaxTypes.IDENTIFIER)) {
